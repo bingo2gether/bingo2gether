@@ -1,0 +1,67 @@
+/* Global Styles for Bingo2Gether */
+:root {
+  --brand-purple: #4B1E6D;
+  --brand-magenta: #C13C7A;
+  --brand-gold: #E6C26E;
+
+  /* Dynamic colors that will be overridden by skins */
+  --primary-color: #4B1E6D;
+  --secondary-color: #C13C7A;
+  --accent-color: #E6C26E;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animations */
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.2s ease-in-out 0s 2;
+}
+
+/* For printing */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

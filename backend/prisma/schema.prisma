@@ -1,0 +1,94 @@
+// Prisma Schema for Bingo2Gether
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String?   // Null if OAuth only
+  name          String?
+  
+  // OAuth
+  googleId      String?   @unique
+  facebookId    String?   @unique
+  
+  // Subscription
+  isPro         Boolean   @default(false)
+  proExpiresAt  DateTime?
+  stripeCustomerId String?
+  mpCustomerId  String?
+  
+  // Relations
+  games         Game[]
+  pushSubscriptions PushSubscription[]
+  payments      Payment[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([email])
+  @@index([googleId])
+  @@index([facebookId])
+}
+
+model Game {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Game State (JSON) - Entire GameState object from frontend
+  state         Json
+  
+  // Metadata for queries
+  isSetup       Boolean
+  lastPlayedAt  DateTime?
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([userId])
+  @@index([lastPlayedAt])
+}
+
+model PushSubscription {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  endpoint      String    @unique
+  keys          Json      // { p256dh, auth }
+  
+  createdAt     DateTime  @default(now())
+  
+  @@index([userId])
+}
+
+model Payment {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  provider      String    // 'stripe' | 'mercadopago'
+  providerId    String    // Payment ID from provider
+  amount        Float
+  currency      String    @default("BRL")
+  status        String    // 'pending' | 'completed' | 'failed' | 'refunded'
+  
+  // Metadata
+  metadata      Json?
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([userId])
+  @@index([providerId])
+  @@index([status])
+}

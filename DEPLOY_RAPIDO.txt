@@ -1,0 +1,214 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  🚀 GUIA RÁPIDO - DEPLOY EM PRODUÇÃO                        ║
+║                        BINGO2GETHER - VENDA                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⏱️  TEMPO ESTIMADO: 45 MINUTOS
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PASSO 1: GITHUB (5 minutos)
+
+1. Abra: https://github.com/new
+2. Nome: bingo2gether
+3. Public (importante!)
+4. Clique: "Create Repository"
+
+5. No terminal do seu PC:
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin https://github.com/SEU_USER/bingo2gether.git
+   git branch -M main
+   git push -u origin main
+
+✅ Seu código está no GitHub!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🗄️  PASSO 2: BANCO DE DADOS - SUPABASE (10 minutos)
+
+1. Abra: https://supabase.com
+2. Clique: "Start Your Project"
+3. Login com GitHub
+4. Clique: "New Project"
+   - Name: bingo2gether-prod
+   - Password: (salve essa senha!)
+   - Region: Brazil (São Paulo)
+5. Aguarde 2-3 minutos
+
+6. Quando criar, vá para:
+   Settings → Database → Connection String
+7. Copie a string (tipo: postgresql://.....)
+8. **SALVE ISSO EM UM ARQUIVO SEGURO!**
+
+✅ Banco de dados criado!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🖥️  PASSO 3: BACKEND - RENDER (10 minutos)
+
+1. Abra: https://render.com
+2. Clique: "Get Started"
+3. Login com GitHub
+4. Autorize o acesso
+
+5. Clique: "New +" → "Web Service"
+6. Clique: "Connect Repository"
+7. Selecione: bingo2gether
+8. Clique: "Connect"
+
+9. Preencha:
+   - Name: bingo2gether-api
+   - Root Directory: backend
+   - Runtime: Node
+   - Build: npm install && npm run build
+   - Start: npm run start
+
+10. Clique: "Environment"
+    Adicione:
+    
+    DATABASE_URL = (aquela string do Supabase)
+    PORT = 3001
+    NODE_ENV = production
+    FRONTEND_URL = (você descobre depois)
+    JWT_SECRET = (gere aqui: https://www.random.org/ - copie 64 caracteres aleatórios)
+    SESSION_SECRET = (outro número aleatório de 64 caracteres)
+    Resto pode deixar como estava
+
+11. Clique: "Create Web Service"
+12. Aguarde 5-10 minutos (vai compilar)
+13. Quando pronto, copie a URL que aparece:
+    Exemplo: https://bingo2gether-api.onrender.com
+    
+    **SALVE ESSA URL!**
+
+✅ Backend está rodando em produção!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎨 PASSO 4: FRONTEND - VERCEL (5 minutos)
+
+1. Abra: https://vercel.com
+2. Clique: "Sign Up"
+3. Login com GitHub
+
+4. Clique: "Add New..." → "Project"
+5. Selecione: bingo2gether
+6. Clique: "Import"
+
+7. Root Directory: frontend
+
+8. Clique: "Environment Variables"
+   Adicione:
+   
+   VITE_API_URL = https://bingo2gether-api.onrender.com/api
+   VITE_STRIPE_PUBLIC_KEY = pk_test_51SwYapAb3nY4J0fiMa39Au5VG3cn0yERMdTSPS6dqrkO2pJR0wHjx8nPbcDAUeSG6caSKKnWSTyFLDB3r2AFtaZm005qjg2641
+   VITE_VAPID_PUBLIC_KEY = BHtjVHoTBqoYMHOPEdp4XuT0Bf6NA7dn-B0KfKhyelFt_izpgnUsNW3iRgqEiJ-gTxMwEDoNo-LALu0jvLJaYpg
+
+9. Clique: "Deploy"
+10. Aguarde 3-5 minutos
+11. Quando pronto, copie a URL:
+    Exemplo: https://bingo2gether.vercel.app
+    
+    **SALVE ESSA URL!**
+
+✅ Frontend está rodando em produção!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔄 PASSO 5: ATUALIZAR BACKEND COM FRONTEND URL (2 minutos)
+
+1. Volte ao Render
+2. Clique em seu serviço (bingo2gether-api)
+3. Vá para: Environment
+4. Procure: FRONTEND_URL
+5. Mude para: https://bingo2gether.vercel.app
+
+6. Clique: "Manual Deploy" → "Deploy Latest Commit"
+7. Aguarde 5 minutos
+
+✅ URLs sincronizadas!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PASSO 6: TESTAR (5 minutos)
+
+1. Abra: https://bingo2gether.vercel.app
+   Você deve ver a aplicação carregada!
+
+2. No navegador, pressione F12 (DevTools)
+3. Vá para aba "Network"
+4. Tente fazer login
+
+5. Verifique se chamadas vão para:
+   https://bingo2gether-api.onrender.com/api
+
+Se funcionou, PARABÉNS! 🎉
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🌐 SEUS LINKS FINAIS:
+
+📱 FRONTEND (Compartilhe com clientes):
+   https://bingo2gether.vercel.app
+
+🔌 API (Use internamente):
+   https://bingo2gether-api.onrender.com/api
+
+🗄️  BANCO DE DADOS:
+   Gerenciado pelo Supabase (não compartilhe!)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💰 PRÓXIMO PASSO: VENDA
+
+Seu app está pronto! Agora:
+
+1. Leia: SALES_GUIDE.md (como vender)
+2. Configure: Stripe ou Mercado Pago (pagamentos)
+3. Customize: Cores/logo (branding)
+4. Lance: Divulgue nas redes sociais
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🆘 ERRO? VERIFIQUE:
+
+❌ "Frontend não carrega"
+   → Vercel pode estar deployando, aguarde
+   → Procure por logs em: Vercel Dashboard → Deployments
+
+❌ "Erro de CORS"
+   → FRONTEND_URL no Render está correto?
+   → Aguarde sync (2-3 minutos)
+
+❌ "API não responde"
+   → Render pode estar lento, aguarde
+   → Procure por erros em: Render → Logs
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 VERIFICAÇÃO FINAL:
+
+curl https://bingo2gether-api.onrender.com/health
+
+Deve retornar: {"status":"OK","timestamp":"..."}
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎉 PARABÉNS!
+
+Sua aplicação BINGO2GETHER está:
+✅ Online
+✅ Rodando em produção
+✅ Com banco de dados real
+✅ Pronta para vender
+
+Compartilhe: https://bingo2gether.vercel.app
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Data: 3 de Fevereiro de 2026
+Status: ✅ PRONTO PARA PRODUÇÃO
+
+═══════════════════════════════════════════════════════════════════════════════
