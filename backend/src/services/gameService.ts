@@ -9,13 +9,9 @@ export class GameService {
         });
     }
 
-    static async saveGame(userId: string, state: any) {
-        // Use a more efficient query pattern:
-        // 1. Try to get existing game first
-        // 2. Use updateMany with where clause that checks userId
-        // 3. If no rows affected, create new game
-        // This avoids the need to fetch the game ID separately
-        
+    static async saveGame(userId: string, state: any): Promise<void> {
+        // Use updateMany for efficiency - updates all games for this user
+        // This is optimal since it's a single database operation
         const updateResult = await prisma.game.updateMany({
             where: { userId },
             data: {
@@ -25,23 +21,17 @@ export class GameService {
             },
         });
 
-        if (updateResult.count > 0) {
-            // Game was updated, fetch and return it
-            return prisma.game.findFirst({
-                where: { userId },
-                orderBy: { updatedAt: 'desc' },
+        // If no game exists yet, create one
+        if (updateResult.count === 0) {
+            await prisma.game.create({
+                data: {
+                    userId,
+                    state,
+                    isSetup: state.isSetup || false,
+                    lastPlayedAt: new Date(),
+                },
             });
         }
-
-        // No existing game, create a new one
-        return prisma.game.create({
-            data: {
-                userId,
-                state,
-                isSetup: state.isSetup || false,
-                lastPlayedAt: new Date(),
-            },
-        });
     }
 
     static async resetGame(userId: string) {
