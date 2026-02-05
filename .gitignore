@@ -48,3 +48,4 @@ backend/prisma/migrations/*
 .cache/
 .temp/
 .tmp/
+deploy-config.txt
