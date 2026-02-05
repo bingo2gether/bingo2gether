@@ -9,30 +9,29 @@ export class GameService {
         });
     }
 
-    static async saveGame(userId: string, state: any) {
-        const existingGame = await prisma.game.findFirst({
+    static async saveGame(userId: string, state: any): Promise<void> {
+        // Use updateMany for efficiency - updates all games for this user
+        // This is optimal since it's a single database operation
+        const updateResult = await prisma.game.updateMany({
             where: { userId },
+            data: {
+                state,
+                isSetup: state.isSetup || false,
+                lastPlayedAt: new Date(),
+            },
         });
 
-        if (existingGame) {
-            return prisma.game.update({
-                where: { id: existingGame.id },
+        // If no game exists yet, create one
+        if (updateResult.count === 0) {
+            await prisma.game.create({
                 data: {
+                    userId,
                     state,
                     isSetup: state.isSetup || false,
                     lastPlayedAt: new Date(),
                 },
             });
         }
-
-        return prisma.game.create({
-            data: {
-                userId,
-                state,
-                isSetup: state.isSetup || false,
-                lastPlayedAt: new Date(),
-            },
-        });
     }
 
     static async resetGame(userId: string) {

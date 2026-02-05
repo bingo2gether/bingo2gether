@@ -1,21 +1,19 @@
 import { Request, Response } from 'express';
 import { GameService } from '../services/gameService.js';
-import { AuthService } from '../services/authService.js';
+
+interface AuthenticatedRequest extends Request {
+    user: {
+        id: string;
+        email: string;
+        isPro: boolean;
+    };
+}
 
 export class GameController {
-    private static async getUserIdFromRequest(req: Request) {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
-
-        const token = authHeader.split(' ')[1];
-        const user = await AuthService.verifyToken(token);
-        return user ? user.id : null;
-    }
-
     static async getGame(req: Request, res: Response) {
         try {
-            const userId = await GameController.getUserIdFromRequest(req);
-            if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+            // User is already authenticated by middleware
+            const userId = (req as AuthenticatedRequest).user.id;
 
             const game = await GameService.getGameByUserId(userId);
             if (!game) return res.status(404).json({ error: 'Game not found' });
@@ -28,14 +26,15 @@ export class GameController {
 
     static async syncGame(req: Request, res: Response) {
         try {
-            const userId = await GameController.getUserIdFromRequest(req);
-            if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+            // User is already authenticated by middleware
+            const userId = (req as AuthenticatedRequest).user.id;
 
             const { state } = req.body;
             if (!state) return res.status(400).json({ error: 'State is required' });
 
-            const game = await GameService.saveGame(userId, state);
-            res.json(game.state);
+            await GameService.saveGame(userId, state);
+            // Return the state that was just saved instead of fetching from DB
+            res.json(state);
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -43,8 +42,8 @@ export class GameController {
 
     static async reset(req: Request, res: Response) {
         try {
-            const userId = await GameController.getUserIdFromRequest(req);
-            if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+            // User is already authenticated by middleware
+            const userId = (req as AuthenticatedRequest).user.id;
 
             await GameService.resetGame(userId);
             res.status(204).send();

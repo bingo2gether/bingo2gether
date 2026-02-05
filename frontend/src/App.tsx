@@ -13,7 +13,7 @@ import { usePushNotifications } from './hooks/usePushNotifications';
 import LoginPage from './components/auth/LoginPage';
 
 const AppContent: React.FC = () => {
-  const [gameState, setGameState] = useState<GameState>(() => JSON.parse(JSON.stringify(DEFAULT_GAME_STATE)));
+  const [gameState, setGameState] = useState<GameState>(() => structuredClone(DEFAULT_GAME_STATE));
   const [loaded, setLoaded] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [showLoginPage, setShowLoginPage] = useState(false);
@@ -73,7 +73,7 @@ const AppContent: React.FC = () => {
         } catch (error) {
           console.error("Failed to sync game state", error);
         }
-      }, 2000);
+      }, 5000);
 
       return () => clearTimeout(timer);
     }
@@ -91,7 +91,7 @@ const AppContent: React.FC = () => {
   };
 
   const handleReset = () => {
-    const freshState = JSON.parse(JSON.stringify(DEFAULT_GAME_STATE));
+    const freshState = structuredClone(DEFAULT_GAME_STATE);
     freshState.settings.targetDate = new Date().toISOString();
     freshState.settings.startDate = new Date().toISOString();
     setGameState(freshState);
