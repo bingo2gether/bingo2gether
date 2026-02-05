@@ -1,0 +1,48 @@
+# Backend files (not needed for frontend deployment)
+backend/
+
+# Root HTML (status page - not needed in production)
+index.html
+
+# Documentation files
+*.md
+docs/
+
+# Development files
+.env.example
+.env.production.example
+setup.sh
+setup.ps1
+docker-compose.yml
+
+# Git
+.git/
+.github/
+
+# Dependencies
+node_modules/
+
+# Build outputs (except frontend/dist which is needed)
+dist/
+build/
+
+# Testing
+coverage/
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+.cache/
+.temp/
+.tmp/
+types/
