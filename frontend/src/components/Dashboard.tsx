@@ -7,6 +7,7 @@ import GameSummary from './GameSummary';
 import { useTheme } from '../ThemeContext';
 import { BingoLogo } from './Onboarding';
 import PricingModal from './premium/PricingModal';
+import PrintView from './PrintView';
 import { Crown } from 'lucide-react';
 import { SKINS, SkinType } from '../skins';
 
@@ -30,6 +31,9 @@ const Dashboard: React.FC<DashboardProps> = ({ gameState, onUpdateState, onReset
   const [tab, setTab] = useState<'dashboard' | 'grid'>('dashboard');
   const [gridView, setGridView] = useState<'list' | 'cards'>('cards');
   const [showPricingModal, setShowPricingModal] = useState(false);
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [printType, setPrintType] = useState<'cartelas' | 'tabela' | null>(null);
+  const [cartelasPerPage, setCartelasPerPage] = useState<number>(2);
 
   // Route Modal State
   const [routeTab, setRouteTab] = useState<'income' | 'extra' | 'deadline' | 'skins'>('income');
@@ -646,7 +650,7 @@ const Dashboard: React.FC<DashboardProps> = ({ gameState, onUpdateState, onReset
                 <p className="text-[10px] font-bold text-slate-400 uppercase">{gameState.settings.maxNumber} números totais</p>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => window.print()} className="bg-slate-100 dark:bg-slate-800 p-3 rounded-2xl hover:bg-slate-200 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 shadow-sm transition-all active:scale-95">
+                <button onClick={() => setShowPrintModal(true)} className="bg-slate-100 dark:bg-slate-800 p-3 rounded-2xl hover:bg-slate-200 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 shadow-sm transition-all active:scale-95">
                   <Printer size={14} /> Imprimir
                 </button>
               </div>
@@ -821,6 +825,75 @@ const Dashboard: React.FC<DashboardProps> = ({ gameState, onUpdateState, onReset
           currentSkin={currentSkin}
         />
       )}
+
+      {/* Print Modal */}
+      {showPrintModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setShowPrintModal(false)}>
+          <div
+            className={`rounded-[3rem] p-8 max-w-sm w-full text-center relative overflow-hidden shadow-2xl animate-in zoom-in-50 duration-500 border-4 bg-white dark:bg-slate-900 border-brand-gold`}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-brand-gold via-brand-magenta to-brand-gold animate-pulse"></div>
+
+            <div className="mb-6">
+              <Printer size={48} className="mx-auto text-brand-purple dark:text-brand-gold" />
+            </div>
+
+            <h2 className="text-2xl font-black text-brand-purple dark:text-brand-gold tracking-tight mb-2">Escolha o tipo de Impressão</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-8 font-bold">Qual formato você deseja imprimir?</p>
+
+            <div className="space-y-3">
+              <div className="flex gap-2 justify-center mb-2">
+                <label className="text-[10px] font-black text-slate-400 mr-2">Cartelas / folha:</label>
+                {[1,2,3,4].map(n => (
+                  <button
+                    key={n}
+                    onClick={() => setCartelasPerPage(n)}
+                    className={`py-2 px-3 rounded-xl text-sm font-black ${cartelasPerPage===n ? 'bg-brand-purple text-white' : 'bg-slate-100 text-slate-700'}`}>
+                    {n}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => {
+                              setPrintType('cartelas');
+                  setShowPrintModal(false);
+                  setTimeout(() => {
+                    window.print();
+                    setTimeout(() => setPrintType(null), 500);
+                  }, 100);
+                }}
+                className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3"
+              >
+                <Grid size={20} /> Cartelas
+              </button>
+
+              <button
+                onClick={() => {
+                  setPrintType('tabela');
+                  setShowPrintModal(false);
+                  setTimeout(() => {
+                    window.print();
+                    setTimeout(() => setPrintType(null), 500);
+                  }, 100);
+                }}
+                className="w-full bg-brand-magenta hover:bg-brand-magenta/90 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3"
+              >
+                <List size={20} /> Tabela Corrida
+              </button>
+
+              <button
+                onClick={() => setShowPrintModal(false)}
+                className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all active:scale-95"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <PrintView printType={printType} bingoCards={bingoCards} maxNumber={gameState.settings.maxNumber} gameState={gameState} cartelasPerPage={cartelasPerPage} />
 
       <PricingModal isOpen={showPricingModal} onClose={() => setShowPricingModal(false)} />
     </div>

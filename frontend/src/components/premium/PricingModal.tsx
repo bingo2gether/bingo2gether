@@ -170,7 +170,7 @@ const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) => {
                                     ) : (
                                         <>
                                             <CreditCard size={18} />
-                                            Cartão Internacional
+                                            Cartão de Crédito
                                         </>
                                     )}
                                 </button>

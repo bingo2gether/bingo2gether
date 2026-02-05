@@ -232,12 +232,12 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, isPro = false }) =>
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -20 }}
-                                className="text-center space-y-8"
+                                className="text-center space-y-8 w-full flex flex-col items-center justify-center"
                             >
-                                <div className="flex justify-center scale-110 mb-4">
+                                <div className="w-full flex justify-center items-center scale-110 mb-4">
                                     <BingoLogo />
                                 </div>
-                                <div>
+                                <div className="w-full">
                                     <p className="text-brand-purple dark:text-brand-gold font-black text-sm uppercase tracking-widest mb-2">{greeting}</p>
                                     <h1 className="text-4xl font-black text-brand-purple dark:text-white tracking-tight">Bingo2Gether</h1>
                                     <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em]">Construindo o futuro a dois</p>
