@@ -4,8 +4,7 @@ backend/
 # Root HTML (status page - not needed in production)
 index.html
 
-# Documentation files
-*.md
+# Documentation files (deployment guides are OK to keep)
 docs/
 
 # Development files
@@ -22,9 +21,9 @@ docker-compose.yml
 # Dependencies
 node_modules/
 
-# Build outputs (except frontend/dist which is needed)
-dist/
-build/
+# Build outputs (except frontend/dist which is needed by Vercel)
+backend/dist/
+backend/build/
 
 # Testing
 coverage/

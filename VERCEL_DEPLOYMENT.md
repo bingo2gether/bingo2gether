@@ -21,12 +21,18 @@ Este guia mostra como fazer deploy do frontend no Vercel.
 
 O Vercel agora vai detectar automaticamente as configurações do `vercel.json`:
 
-- ✅ **Build Command**: `cd frontend && npm run build`
+- ✅ **Build Command**: `npm --prefix frontend run build`
 - ✅ **Output Directory**: `frontend/dist`
-- ✅ **Install Command**: `npm install`
+- ✅ **Install Command**: `npm install --prefix frontend`
 - ✅ **Framework**: Detectado automaticamente (Vite)
 
 **Não precisa alterar nada!** As configurações já estão no `vercel.json`.
+
+> **💡 Dica**: Se o Vercel não detectar automaticamente, você pode configurar manualmente em "Build & Development Settings":
+> - Framework Preset: `Vite`
+> - Build Command: `npm --prefix frontend run build`
+> - Output Directory: `frontend/dist`
+> - Install Command: `npm install --prefix frontend`
 
 ### Passo 3: Variáveis de Ambiente
 
@@ -81,6 +87,28 @@ bingo2gether/
 ```
 
 ## 🐛 Troubleshooting
+
+### "No Output Directory named 'public' found"
+
+**Erro**: "No Output Directory named 'public' found after the Build completed"
+
+**Causa**: O Vercel não está reconhecendo o `vercel.json` ou está usando configurações antigas
+
+**Solução**:
+1. No dashboard do Vercel, vá em: Project Settings → General
+2. Em "Build & Development Settings", clique em "Override"
+3. Configure manualmente:
+   - **Framework Preset**: Vite
+   - **Build Command**: `npm --prefix frontend run build`
+   - **Output Directory**: `frontend/dist`
+   - **Install Command**: `npm install --prefix frontend`
+4. Clique em "Save"
+5. Faça um novo deploy: Deployments → ... → Redeploy
+
+**Alternativa**: 
+- Certifique-se de que o `vercel.json` está no root do repositório
+- Faça commit e push do `vercel.json` se ainda não fez
+- Reimporte o projeto no Vercel
 
 ### Build falhou
 
