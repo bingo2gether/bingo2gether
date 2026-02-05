@@ -88,6 +88,21 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ## ⚡ AÇÃO IMEDIATA
 
+### 🚀 Deploy Automatizado (NOVO!)
+
+```bash
+# Execute um único comando para preparar tudo:
+bash scripts/quick-deploy.sh
+```
+
+Este script irá:
+- ✓ Validar seu projeto
+- ✓ Gerar secrets de segurança
+- ✓ Criar configurações de deploy
+- ✓ Guiá-lo pelo processo
+
+### 📖 Ou escolha manualmente:
+
 ```bash
 # 1. Escolha um método de deploy
 cat CHECKLIST_DEPLOY.md        # Rápido (recomendado)
