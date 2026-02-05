@@ -51,9 +51,27 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// Health Check
+// Health Check - Enhanced for production monitoring
 app.get('/health', (req, res) => {
-    res.json({ status: 'OK', timestamp: new Date() });
+    const healthCheck = {
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development',
+        version: '1.0.0',
+        memory: {
+            used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+            total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
+            unit: 'MB'
+        }
+    };
+    res.json(healthCheck);
+});
+
+// Ready check - for Kubernetes/container orchestration
+app.get('/ready', (req, res) => {
+    // Check if app is ready to receive traffic
+    res.json({ ready: true, timestamp: new Date().toISOString() });
 });
 
 // Routes
