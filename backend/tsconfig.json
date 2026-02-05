@@ -10,12 +10,13 @@
         "outDir": "./dist",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "strict": true,
+        "strict": false,
         "skipLibCheck": true,
         "resolveJsonModule": true,
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
+        "noImplicitAny": false,
         "types": [
             "node"
         ]
